@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  php-apache:
+    ports:
+      - "80:80"
+    build: './build/php'
+    depends_on:
+      - mysql
+    volumes:
+      - ./app:/var/www/html
+  mysql:
+    restart: always
+    container_name: "mysql"
+    ports:
+      - "3306:3306"
+    build: './build/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: "super-secret-password"
+      MYSQL_DATABASE: "my-wonderful-website"
+    volumes:
+      - dbData:/var/lib/mysql
+  mail-server:
+    build: './build/mail'
+    depends_on:
+      - mysql
+    volumes:
+      - ./mail:/mail
+
+volumes:
+  app:
+  dbData:
+  mail:
